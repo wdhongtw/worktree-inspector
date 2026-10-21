@@ -44,6 +44,9 @@
     toastTimer = setTimeout(() => el.classList.add('hidden'), 2200);
   }
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const sidecarToken = urlParams.get('token') || '';
+
   function syncThemeScheme() {
     const probe = document.createElement('span');
     probe.style.cssText = 'position:absolute;visibility:hidden;color:var(--background, #18181b)';
@@ -58,14 +61,22 @@
     document.documentElement.dataset.theme = lum < 0.5 ? 'dark' : 'light';
   }
   syncThemeScheme();
+  window.addEventListener('message', (event) => {
+    if (event.data?.type === 'theme-change') {
+      const vars = event.data.payload?.cssVariables || {};
+      for (const [key, value] of Object.entries(vars)) {
+        document.documentElement.style.setProperty(key, value);
+      }
+      syncThemeScheme();
+    }
+  });
   new MutationObserver(syncThemeScheme).observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['style'],
   });
 
   function resolveConversationId() {
-    const params = new URLSearchParams(window.location.search);
-    return window.sidecar?.conversationId || params.get('conversationId') || '';
+    return urlParams.get('conversationId') || window.sidecar?.conversationId || '';
   }
 
   async function apiGet(path, params = {}) {
@@ -76,8 +87,11 @@
       }
     }
     const url = qs.toString() ? `${path}?${qs.toString()}` : path;
-    const fetcher = window.sidecar?.fetch ? window.sidecar.fetch.bind(window.sidecar) : fetch;
-    const res = await fetcher(url, { method: 'GET' });
+    const headers = {};
+    if (sidecarToken) {
+      headers['X-Sidecar-Token'] = sidecarToken;
+    }
+    const res = await fetch(url, { method: 'GET', headers });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   }
@@ -420,10 +434,7 @@
 
   function openInNativeFileViewer(absPath) {
     const fileUri = absPath.startsWith('file://') ? absPath : `file://${absPath}`;
-    if (window.sidecar?.ui?.toggleAuxPane) {
-      window.sidecar.ui.toggleAuxPane({ tabType: 'fileView', uri: fileUri });
-      showToast(`Opened ${absPath.split('/').pop()}`);
-    } else if (window.parent && window.parent !== window) {
+    if (window.parent && window.parent !== window) {
       window.parent.postMessage(
         { type: 'toggle-aux-pane', payload: { tabType: 'fileView', uri: fileUri } },
         '*'

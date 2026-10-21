@@ -19,11 +19,11 @@ import { homedir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { Response, SidecarApp } from 'sidecar_sdk';
 import {
   getSessionWorktreeState,
   normalizeWorktreePath,
 } from '../../lib/session_worktrees.mjs';
+import { HttpResponse, RawSidecarServer } from '../../lib/sidecar_http.mjs';
 
 const execFileAsync = promisify(execFile);
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -403,7 +403,7 @@ async function buildUntrackedFileDiffs(wtPath) {
   return out;
 }
 
-const app = new SidecarApp();
+const app = new RawSidecarServer();
 
 app.page('/', () => readFileSync(join(__dirname, 'index.html'), 'utf-8'));
 app.page('/fullscreen', () => readFileSync(join(__dirname, 'index.html'), 'utf-8'));
@@ -411,7 +411,7 @@ app.page('/fullscreen', () => readFileSync(join(__dirname, 'index.html'), 'utf-8
 for (const [route, [file, contentType]] of Object.entries(STATIC_ASSETS)) {
   app.api(
     route,
-    () => new Response(readFileSync(join(__dirname, file), 'utf-8'), { contentType }),
+    () => new HttpResponse(readFileSync(join(__dirname, file), 'utf-8'), { contentType }),
     'GET'
   );
 }
