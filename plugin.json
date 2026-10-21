@@ -1,0 +1,11 @@
+{
+  "name": "worktree-inspector",
+  "displayName": "Git Worktree Inspector",
+  "description": "Inspect active Git worktrees and diffs tracked via per-chat session metadata (worktree_* MCP tools).",
+  "version": "0.3.0",
+  "suggestedPrompts": [
+    "Show active git worktrees and diffs for this conversation",
+    "Review uncommitted changes in the current worktree",
+    "Clean up finished git worktrees from this conversation"
+  ]
+}

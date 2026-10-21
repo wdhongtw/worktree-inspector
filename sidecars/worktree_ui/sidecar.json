@@ -1,0 +1,23 @@
+{
+  "command": "node",
+  "args": ["main.mjs"],
+  "restart_policy": "always",
+  "display_name": "Worktrees",
+  "description": "Inspect active Git worktrees and live diffs tracked via per-chat session metadata",
+  "has_web_ui": true,
+  "ui_config": {
+    "display_name": "Worktrees",
+    "views": [
+      {
+        "path": "/",
+        "entrypoint": "SIDECAR_UI_ENTRYPOINT_AUX_PANE",
+        "title": "Worktrees"
+      },
+      {
+        "path": "/fullscreen",
+        "entrypoint": "SIDECAR_UI_ENTRYPOINT_FULL_PANE",
+        "title": "Worktrees (Full)"
+      }
+    ]
+  }
+}

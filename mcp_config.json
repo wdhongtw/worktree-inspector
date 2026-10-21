@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "worktree": {
+      "command": "node",
+      "args": [
+        "${PLUGIN_ROOT}/mcp/worktree_mcp.mjs"
+      ],
+      "tools": {
+        "worktree_register": {
+          "eager": true
+        },
+        "worktree_focus": {
+          "eager": true
+        },
+        "worktree_unregister": {
+          "eager": true
+        },
+        "worktree_list": {
+          "eager": true
+        }
+      }
+    }
+  }
+}

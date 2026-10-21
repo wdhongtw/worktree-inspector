@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Git Worktrees</title>
+  <script src="/preload.js"></script>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-top">
+        <div class="title-group">
+          <svg class="title-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="4" cy="3.5" r="1.75" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="4" cy="12.5" r="1.75" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="12" cy="6.5" r="1.75" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 5.25v5.5M4 6.5c0 2 8 0 8 1.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <h1 class="app-title">Git Worktrees</h1>
+          <span id="conv-badge" class="conv-badge hidden" title="Active Conversation ID"></span>
+          <span id="fork-badge" class="conv-badge fork hidden" title="Forked from parent conversation"></span>
+        </div>
+        <div class="header-actions">
+          <label class="auto-toggle" title="Auto-refresh every 4 seconds">
+            <input type="checkbox" id="chk-live" checked>
+            <span class="live-dot" aria-hidden="true"></span>
+            <span>Live</span>
+          </label>
+          <button id="btn-refresh" type="button" class="icon-btn" title="Refresh worktrees &amp; diffs now">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M13.5 8a5.5 5.5 0 1 1-1.4-3.66M13.5 2.5v2.25h-2.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="session-meta-bar">
+        <span class="session-meta-label">Tracked in Session (<code>worktree_*</code>)</span>
+        <span class="badge-count" id="count-tracked">0</span>
+      </div>
+    </header>
+
+    <div class="workspace-body">
+      <section class="worktrees-section" aria-label="Tracked worktree list">
+        <div id="worktree-list" class="worktree-list">
+          <div class="empty-state">Loading session worktree metadata…</div>
+        </div>
+      </section>
+
+      <section id="detail-section" class="detail-section hidden" aria-label="Selected worktree diff">
+        <div class="detail-header">
+          <div class="detail-title-row">
+            <div class="detail-path-info">
+              <span id="detail-repo" class="repo-pill"></span>
+              <span id="detail-name" class="detail-name"></span>
+              <span id="detail-branch" class="branch-pill"></span>
+              <span id="detail-focused" class="status-pill focused hidden">Focused</span>
+            </div>
+            <div class="detail-agent-actions">
+              <button id="btn-copy-wt-path" type="button" class="ghost-btn sm" title="Copy worktree path">Copy Path</button>
+            </div>
+          </div>
+          <div id="detail-submeta" class="detail-submeta"></div>
+
+          <div class="diff-mode-bar">
+            <div class="segmented diff-modes" role="tablist" aria-label="Diff mode">
+              <button type="button" class="seg-btn active" data-mode="all" title="Committed + dirty changes compared to base branch">All vs Base</button>
+              <button type="button" class="seg-btn" data-mode="branch" title="Committed changes on this branch">Commits</button>
+              <button type="button" class="seg-btn" data-mode="dirty" title="All uncommitted working tree, staged, and untracked changes">Dirty</button>
+              <button type="button" class="seg-btn" data-mode="staged" title="Staged index changes only (git diff --cached)">Staged</button>
+            </div>
+          </div>
+
+          <div id="commits-box" class="commits-box hidden"></div>
+
+          <div class="file-toolbar">
+            <input id="file-filter" type="search" class="file-search" placeholder="Filter changed files…" autocomplete="off">
+            <span id="diff-summary-stats" class="diff-summary-stats"></span>
+            <button id="btn-expand-all" type="button" class="ghost-btn sm">Expand All</button>
+            <button id="btn-collapse-all" type="button" class="ghost-btn sm">Collapse All</button>
+          </div>
+        </div>
+
+        <div id="diff-container" class="diff-container"></div>
+      </section>
+    </div>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
