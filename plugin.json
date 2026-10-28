@@ -1,7 +1,7 @@
 {
   "name": "worktree-inspector",
   "displayName": "Git Worktree Inspector",
-  "description": "Inspect active Git worktrees and diffs tracked via per-chat session metadata (worktree_* MCP tools).",
+  "description": "Inspect active Git worktrees and diffs tracked via per-chat session metadata.",
   "version": "0.3.1",
   "logo": "assets/logo.svg",
   "suggestedPrompts": [
